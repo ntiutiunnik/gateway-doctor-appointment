@@ -1,0 +1,81 @@
+Configuration:
+
+  Properties:
+    Property:
+      - name: logPath
+        value: "/var/log/doctor-appointment/gateway/gateway-doctor-appointment"
+      - name: defaultPattern
+        value: "%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${hostName} --- [%15.15t] %c{10} : %m%n%ex{15}"
+      - name: log_file_max_size
+        value: 100 MB
+
+  Appenders:
+    RollingRandomAccessFile:
+      - name: ApplicationLogAppender
+        immediateFlush: false
+        fileName: ${logPath}/application.log
+        filePattern: ${logPath}/archive/application-%d{yyyy-MM-dd}-%i.log
+        PatternLayout:
+          pattern: ${defaultPattern}
+        Policies:
+          SizeBasedTriggeringPolicy:
+            size: ${log_file_max_size}
+        DefaultRolloverStrategy:
+          fileIndex: nomax
+
+      - name: FrameworkLogAppender
+        immediateFlush: false
+        fileName: ${logPath}/framework.log
+        filePattern: ${logPath}/archive/framework-%d{yyyy-MM-dd}-%i.log
+        PatternLayout:
+          pattern: ${defaultPattern}
+        Policies:
+          SizeBasedTriggeringPolicy:
+            size: ${log_file_max_size}
+        DefaultRolloverStrategy:
+          fileIndex: nomax
+
+  Loggers:
+    Root:
+      level: info
+      AppenderRef:
+        - ref: ApplicationLogAppender
+
+    AsyncLogger:
+      # Application logging bindings
+      - name: com.demo.gateway.doctorappointment
+        additivity: false
+        level: debug
+        AppenderRef:
+          - ref: ApplicationLogAppender
+
+      - name: org.springframework.boot
+        additivity: false
+        level: error
+        AppenderRef:
+          - ref: ApplicationLogAppender
+
+      # Framework logging bindings
+      - name: org.springframework
+        additivity: false
+        level: info
+        AppenderRef:
+          - ref: FrameworkLogAppender
+
+      - name: org.springframework.cloud.gateway
+        additivity: false
+        level: trace
+        AppenderRef:
+          - ref: FrameworkLogAppender
+
+      - name: org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator
+        additivity: false
+        level: info
+        AppenderRef:
+          - ref: FrameworkLogAppender
+
+      - name: org.apache
+        additivity: false
+        level: info
+        AppenderRef:
+          - ref: FrameworkLogAppender
