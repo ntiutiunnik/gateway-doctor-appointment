@@ -9,5 +9,4 @@ public class GatewayDoctorAppointmentApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(GatewayDoctorAppointmentApplication.class, args);
 	}
-
 }
