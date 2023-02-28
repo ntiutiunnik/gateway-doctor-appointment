@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-doctor-appointment-service
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: gateway-doctor-appointment
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-doctor-appointment-deployment
+  labels:
+    app: gateway-doctor-appointment-deployment
+spec:
+  selector:
+    matchLabels:
+      app: gateway-doctor-appointment
+  template:
+    metadata:
+      labels:
+        app: gateway-doctor-appointment
+    spec:
+      containers:
+        - name: gateway-doctor-appointment
+          image: nikolai97/doctor-appointment-gateway:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: EUREKA_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-doctor-appointment-config
+                  key: EUREKA_HOST
+  replicas: 1
