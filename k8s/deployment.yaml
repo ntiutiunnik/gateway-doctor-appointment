@@ -3,12 +3,12 @@ kind: Service
 metadata:
   name: gateway-doctor-appointment-service
 spec:
-  type: LoadBalancer
   ports:
     - port: 8080
       targetPort: 8080
   selector:
     app: gateway-doctor-appointment
+  type: NodePort
 
 ---
 apiVersion: apps/v1
