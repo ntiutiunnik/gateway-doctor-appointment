@@ -4,12 +4,14 @@ metadata:
   name: my-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/x-forwarded-prefix: "/gateway-doctor-appointment-service"
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   rules:
     - host: doctorappointment.com
       http:
         paths:
-          - path: /
+          - path: /(.*)
             pathType: Prefix
             backend:
               service:
