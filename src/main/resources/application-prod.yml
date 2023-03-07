@@ -25,3 +25,13 @@ spring:
           uri: '${EUREKA_HOST}'
           predicates:
             - Path=/eureka/**
+        - id: manager-doctor-appointment
+          uri: lb://manager-doctor-appointment
+          predicates:
+            - Path=/api/manage/**
+        - id: manager-appointment-history
+          uri: lb://manager-appointment-history
+          predicates:
+            - Path=/api/history/**
+      loadbalancer:
+        use404: true
